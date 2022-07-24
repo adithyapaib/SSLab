@@ -1,195 +1,96 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-void main()
-{
-char fin[10][20],st[10][20],ft[20][20],fol[20][20]; int a=0,e,i,t,b,c,n,k,l=0,j,s,m,p;
-printf("enter the no. of coordinates\n"); scanf("%d",&n);
-printf("Enter the productions in a grammar\n");
-for(i=0;i<n;i++)scanf("%s",st[i]);
-for(i=0;ifol[i][0]='\0';
-for(s=0;s{
-for(i=0;i{
-j=3;
-l=0;
-a=0;
-l1:if(!((st[i][j]>64)&&(st[i][j]<91)))
-{
-for(m=0;m{
-if(ft[i][m]==st[i][j])
-goto s1;
+char prod[3][10] = {"A->aBa", "B->bB", "B->@"}, input[20], stack[30];
+int top =-1, j=0, l , k ;
+
+void pop(){
+    top = top-1;
 }
-ft[i][l]=st[i][j];
-l=l+1;
-s1:j=j+1;
-}
-else
-{
-if(s>0)
-{
-while(st[i][j]!=st[a][0])
-{
-a++;
-}
-b=0;
-while(ft[a][b]!='\0')
-{
-for(m=0;mif(ft[i][m]==ft[a][b])
-goto s2; }
-ft[i][l]=ft[a][b];
-l=l+1;
-s2:b=b+1;
-}
-}
+void push(char p){
+    stack[++top] = p;
 }
 
-while(st[i][j]!='\0'){
-if(st[i][j]=='|') {
-j=j+1;
-goto l1; }
-j=j+1; }
-ft[i][l]='\0';
-}}
-printf("FIRST pos\n");
-for(i=0;iprintf("FIRST[%c]=%s\n",st[i][0],ft[i]);
+void stackpush(char p){
+    if(p == 'A'){
+        pop();
+        for(j=5;j>=3;j--)
+            push(prod[0][j]);
+    }else{
+         pop();
+        for(j=4;j>=3;j--)
+            push(prod[1][j]);
+    }
+}
 
-fol[0][0]='$';
-for(i=0;ik=0;
-j=3;
-if(i==0)
-l=1;
-else
-l=0;
-k1:while((st[i][0]!=st[k][j])&&(kif(st[k][j]=='\0'){
-k++;
-j=2; }
-j++; }
-j=j+1;
-if(st[i][0]==st[k][j
--1])
+void main(){
+    printf("\nFirst(A) = {a} \t Follow (A)= {$}");
+    printf("\nFirst(B) = {b,@} \t Follow (A)= {a}");
+    printf("\n\t\t a \tb \t$");
+    printf("\n\t\t %s  \t",prod[0]);
+    printf("\n\t\t\t %s  \t %s",prod[2], prod[1]);
+    int i;
+    printf("\nEnter a string with $ as send marker :");
+    scanf("%s",input);
+    for(i=0;input[i]!='\0';i++){
+        if(input[i]!='a'&&input[i]!='b'&&input[i]!='$'){
+            printf("Invalid string");
+            exit(0);
+        }
+    }
+    if(input[i-1]!='$'){
+       printf("Invalid string");
+            exit(0);
+    }
 
-{
-if((st[k][j]!='|')&&(st[k][j]!='\0')){
-a=0;
-if(!((st[k][j]>64)&&(st[k][j]<91)))
-{
-for(m=0;m{
-if(fol[i][m]==st[k][j])
-goto q3;
-}
-q3:
-fol[i][l]=st[k][j];
-l++;
-}
-else
-{
-while(st[k][j]!=st[a][0])
-{
-a++;
-}
-p=0;
-while(ft[a][p]!='\0')
-{
-if(ft[a][p]!='@')
-{
-for(m=0;m{
-if(fol[i][m]==ft[a][p])
-goto q2;
-}
-fol[i][l]=ft[a][p];
-l=l+1;
-}
-else
-e=1;
-q2:p++;
-}
-if(e==1)
-{
-e=0;
-goto a1;
-}
-}
-}
-else
-{
-a1:c=0;
-a=0;
-while(st[k][0]!=st[a][0])
-{
-a++;
-}
-while((fol[a][c]!='\0')&&(st[a][0]!=st[i][0]))
-{
-for(m=0;m{
-if(fol[i][m]==fol[a][c])
-goto q1;
-}
-fol[i][l]=fol[a][c];
-l++;
-q1:c++;
-}
-}
-goto k1;
-}
-fol[i][l]='\0';
-}
-printf("FOLLOW pos\n");
-for(i=0;iprintf("FOLLOW[%c]=%s\n",st[i][0],fol[i]);
-printf("\n");
-s=0;
-for(i=0;i{
-j=3;
-while(st[i][j]!='\0')
-{
-if((st[i][j-1]=='|')||(j==3))
-{
-for(p=0;p<=2;p++)
-{
-fin[s][p]=st[i][p];
-}
-t=j;
-for(p=3;((st[i][j]!='|')&&(st[i][j]!='\0'));p++)
-{
-fin[s][p]=st[i][j];
-j++;
-}
-fin[s][p]='\0';
-if(st[i][t]=='@')
-{
-b=0;
-a=0;
-while(st[a][0]!=st[i][0])
-{
-a++;
-}
-while(fol[a][b]!='\0')
-{
-printf("M[%c,%c]=%s\n",st[i][0],fol[a][b],fin[s]);
-b++;
-}
-}
-else if(!((st[i][t]>64)&&(st[i][t]<91)))
-printf("M[%c,%c]=%s\n",st[i][0],st[i][t],fin[s]);
-else
-{
-b=0;
-a=0;
-while(st[a][0]!=st[i][3])
-{
-a++;
-}
-while(ft[a][b]!='\0')
-{
-printf("M[%c,%c]=%s\n",st[i][0],ft[a][b],fin[s]);
-b++;
-}
-}
-s++;
-}
-if(st[i][j]=='|')
-j++;
-}
-}
-} 
+    push('$');
+    push('A');
+    i=0;
+     printf("Stack \t Input \t Action");
+    while(i!=strlen(input) && stack[top] !='$'){
+        printf("\n");
+        for(l=top;l>=0;l--)
+                 printf("%c",stack[l]);
+        printf("\t");
+        for(l=i;l<strlen(input);l++)
+                 printf("%c",input[l]);
+        if(stack[top] == 'A'){
+            printf("A->aBa\n");
+            stackpush('A');
+        }else if(stack[top] =='B'){
+            if(input[i]!='b'){
+                 printf("B->@\n");
+                 printf(" matched  @");
+                 pop();
+            }else{
+                printf("b->bB\n");
+            stackpush('B');
+
+            }
+
+        }
+        else{
+            if(stack[top] == input[i]){
+                printf("pop %c",input[i]);
+                 printf(" matched  @");
+                 pop();
+                 i++;
+
+            }else
+                break;
+
+        }
+
+            
+        
+    }
+     if (stack[top] == '$' && input[i] == '$')
+        // Stack only has $
+         printf("\n$ \t\t $ \nValid Expression");
+    
+           
+        else
+            printf("\nInvalid Exp");
+
 }
